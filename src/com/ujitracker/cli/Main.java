@@ -13,7 +13,6 @@ public class Main {
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-
         listaAsignaturas = FileService.cargarDatos();
 
         boolean salir = false;
@@ -34,6 +33,12 @@ public class Main {
                     mostrarResumen();
                     break;
                 case 4:
+                    eliminarAsignatura();
+                    break;
+                case 5:
+                    eliminarEvaluacion();
+                    break;
+                case 6:
                     FileService.guardarDatos(listaAsignaturas);
                     salir = true;
                     System.out.println("¡Hasta luego!");
@@ -49,7 +54,9 @@ public class Main {
         System.out.println("1. Añadir nueva asignatura");
         System.out.println("2. Añadir nota a una asignatura");
         System.out.println("3. Ver resumen de asignaturas");
-        System.out.println("4. Salir");
+        System.out.println("4. Eliminar una asignatura");
+        System.out.println("5. Eliminar una evaluación de una asignatura");
+        System.out.println("6. Salir y guardar");
     }
 
     private static void crearAsignatura() {
@@ -108,6 +115,67 @@ public class Main {
                     }
                     System.out.println(" => NOTA ACTUAL: " + String.format("%.2f", asig.calculaNotaFinal()));
                 }
+            }
+        }
+
+        private static void eliminarAsignatura() {
+            if (listaAsignaturas.isEmpty()) {
+                System.out.println("⚠ No hay asignaturas para eliminar");
+                return;
+            }
+
+            System.out.println("Selecciona la asignatura que quieres eliminar:");
+            for (int i = 0; i < listaAsignaturas.size(); i++) {
+                System.out.println((i + 1) + ". " + listaAsignaturas.get(i).getNombre());
+            }
+
+            int index = leerEntero("Número de asignatura: ") - 1;
+
+            if (index >= 0 && index < listaAsignaturas.size()) {
+                Asignatura eliminada = listaAsignaturas.remove(index);
+                System.out.println("🗑 Asignatura '" + eliminada.getNombre() + "' eliminada correctamente.");
+            } else {
+                System.out.println("❌ Selección no válida.");
+            }
+        }
+
+        private static void eliminarEvaluacion() {
+            if (listaAsignaturas.isEmpty()) {
+                System.out.println("⚠ No hay asignaturas registradas.");
+                return;
+            }
+
+            System.out.println("Selecciona la asignatura de la que quieres borrar una evaluación");
+            for (int i = 0; i < listaAsignaturas.size(); i++){
+                System.out.println((i + 1) + ". " + listaAsignaturas.get(i).getNombre());
+            }
+
+            int indexAsig = leerEntero("Número de asignatura: ") - 1;
+
+            if (indexAsig >= 0 && indexAsig < listaAsignaturas.size()) {
+                Asignatura asignatura = listaAsignaturas.get(indexAsig);
+                List<Evaluacion> evals = asignatura.getEvaluaciones();
+
+                if (evals.isEmpty()) {
+                    System.out.println("⚠ Esta asignatura no tiene evaluaciones registradas.");
+                    return;
+                }
+
+                System.out.println("Selecciona la evaluación que quieres eliminar:");
+                for (int i = 0; i < evals.size(); i++) {
+                    System.out.println((i + 1) + ". " + evals.get(i));
+                }
+
+                int indexEval = leerEntero("Número de evaluación: ") - 1;
+
+                if (indexEval >= 0 && indexEval < evals.size()) {
+                    Evaluacion eliminada = evals.remove(indexEval);
+                    System.out.println("🗑 Evaluación '" + eliminada.getNombre() + "' eliminada correctamente.");
+                } else {
+                    System.out.println("❌ Selección de evaluación no válida.");
+                }
+            } else {
+                System.out.println("❌ Selección de asignatura no válida.");
             }
         }
 

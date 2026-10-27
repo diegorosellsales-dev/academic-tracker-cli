@@ -2,17 +2,20 @@ package com.ujitracker.cli;
 
 import com.ujitracker.model.Asignatura;
 import com.ujitracker.model.Evaluacion;
+import com.ujitracker.service.FileService;
 
 import javax.sound.midi.SysexMessage;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-    private static List<Asignatura> listaAsignaturas = new ArrayList<>();
+    private static List<Asignatura> listaAsignaturas;
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
+
+        listaAsignaturas = FileService.cargarDatos();
+
         boolean salir = false;
         System.out.println("=== BIENVENIDO A UJI ACADEMIC TRACKER ===");
 
@@ -31,8 +34,9 @@ public class Main {
                     mostrarResumen();
                     break;
                 case 4:
+                    FileService.guardarDatos(listaAsignaturas);
                     salir = true;
-                    System.out.println("¡Hasta luego! Guardando sesión...");
+                    System.out.println("¡Hasta luego!");
                     break;
                 default:
                     System.out.println("Opción no válida. Inténtalo de nuevo.");
@@ -77,7 +81,7 @@ public class Main {
 
             try {
                 Evaluacion eval = new Evaluacion(nombreEval, nota, porcentaje);
-                listaAsignaturas.get(index).agregarEvaluaciones(eval);
+                listaAsignaturas.get(index).agregarEvaluacion(eval);
                 System.out.println("✓ Evaluación añadida con éxito.");
             } catch (IllegalArgumentException e) {
                 System.out.println("❌ Error: " + e.getMessage());

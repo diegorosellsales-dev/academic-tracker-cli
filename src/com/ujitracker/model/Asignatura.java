@@ -21,7 +21,7 @@ public class Asignatura {
         return evaluaciones;
     }
 
-    public void agregarEvaluaciones(Evaluacion evaluacion) {
+    public void agregarEvaluacion(Evaluacion evaluacion) {
         this.evaluaciones.add(evaluacion);
     }
 
